@@ -30,6 +30,6 @@ export class AuthController {
         .status(HttpStatus.UNAUTHORIZED)
         .json({ message: 'Invalid credentials' });
     }
-    return this.authService.login(email, password);
+    return res.status(HttpStatus.OK).json(await this.authService.login(user));
   }
 }
