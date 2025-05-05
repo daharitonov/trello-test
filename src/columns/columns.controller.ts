@@ -1,0 +1,87 @@
+import {
+  Controller,
+  Post,
+  Get,
+  Param,
+  Body,
+  Res,
+  HttpStatus,
+  ParseIntPipe,
+  Delete,
+} from '@nestjs/common';
+import { ColumnsService } from './columns.service';
+import { CreateColumnDto } from './dto/create-column.dto';
+import { Response } from 'express';
+import { ColumnEntity } from './columns.entity';
+import { plainToInstance } from 'class-transformer';
+import { UserService } from 'src/user/user.service';
+
+@Controller('users/:userId/columns')
+export class ColumnsController {
+  constructor(
+    private columnsService: ColumnsService,
+    private userService: UserService,
+  ) {}
+
+  @Post()
+  async createColumn(
+    @Param('userId', ParseIntPipe) userId: number,
+    @Body() dto: CreateColumnDto,
+    @Res() res: Response,
+  ) {
+    const user = await this.userService.findOne(userId);
+    if (!user) {
+      return res
+        .status(HttpStatus.NOT_FOUND)
+        .json({ message: 'User not found' });
+    }
+
+    const column = await this.columnsService.create(dto, userId);
+    return res.status(HttpStatus.CREATED).json(column);
+  }
+
+  @Get()
+  async findColumns(
+    @Param('userId', ParseIntPipe) userId: number,
+    @Res() res: Response,
+  ) {
+    const columns = await this.columnsService.findColumnsByUser(userId);
+    return res
+      .status(HttpStatus.OK)
+      .json(plainToInstance(ColumnEntity, columns));
+  }
+
+  @Get(':columnId')
+  async findColumn(
+    @Param('userId', ParseIntPipe) userId: number,
+    @Param('columnId', ParseIntPipe) columnId: number,
+    @Res() res: Response,
+  ) {
+    const column = await this.columnsService.findColumnById(columnId);
+    if (!column || column.user?.id !== userId) {
+      return res
+        .status(HttpStatus.NOT_FOUND)
+        .json({ message: 'Column not found' });
+    }
+
+    return res
+      .status(HttpStatus.OK)
+      .json(plainToInstance(ColumnEntity, column));
+  }
+  @Delete(':columnId')
+  async deleteColumn(
+    @Param('userId', ParseIntPipe) userId: number,
+    @Param('columnId', ParseIntPipe) columnId: number,
+    @Res() res: Response,
+  ) {
+    const column = await this.columnsService.findColumnById(columnId);
+    if (!column || column.user?.id !== userId) {
+      return res
+        .status(HttpStatus.NOT_FOUND)
+        .json({ message: 'Column not found' });
+    }
+
+    await this.columnsService.deleteColumn(columnId);
+    return res.status(HttpStatus.NO_CONTENT).send();
+  }
+}

@@ -8,6 +8,7 @@ import {
   ManyToOne,
 } from 'typeorm';
 import { User } from 'src/user/user.entity';
+import { Exclude } from 'class-transformer';
 
 @Entity('columns')
 export class ColumnEntity {
@@ -19,6 +20,7 @@ export class ColumnEntity {
 
   @ManyToOne(() => User, (user) => user.columns)
   @JoinColumn({ name: 'user_id' })
+  @Exclude()
   user: User;
 
   @CreateDateColumn()

@@ -8,6 +8,7 @@ import {
   Param,
   Res,
   HttpStatus,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -32,7 +33,7 @@ export class UserController {
   }
 
   @Get(':id')
-  async findOne(@Param('id') id: number, @Res() res: Response) {
+  async findOne(@Param('id', ParseIntPipe) id: number, @Res() res: Response) {
     const user = await this.userService.findOne(id);
     if (!user) {
       return res
