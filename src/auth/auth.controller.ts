@@ -1,13 +1,18 @@
-import { Controller, Post, Body, HttpStatus, Res } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  HttpStatus,
+  Res,
+  UsePipes,
+  ValidationPipe,
+} from '@nestjs/common';
 import { UserService } from 'src/user/user.service';
 import { User } from 'src/user/user.entity';
 import { Response } from 'express';
 import { AuthService } from './auth.service';
-
-interface LoginDto {
-  email: string;
-  password: string;
-}
+import { LoginDto } from './dto/login.dto';
+import { CreateUserDto } from 'src/user/dto/create-user.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -17,8 +22,12 @@ export class AuthController {
   ) {}
 
   @Post('register')
-  async register(@Body() user: User): Promise<User> {
-    return this.userService.create(user);
+  @UsePipes(new ValidationPipe({ whitelist: true }))
+  async register(@Body() user: CreateUserDto): Promise<User> {
+    return this.userService.create(<User>{
+      email: user.email,
+      password: user.password,
+    });
   }
 
   @Post('login')
