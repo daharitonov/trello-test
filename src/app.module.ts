@@ -5,6 +5,7 @@ import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ColumnsModule } from './columns/columns.module';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
         synchronize: true, // отключи на проде!
       }),
     }),
+    ColumnsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
