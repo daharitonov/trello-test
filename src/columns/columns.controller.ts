@@ -8,6 +8,7 @@ import {
   HttpStatus,
   ParseIntPipe,
   Delete,
+  Put,
 } from '@nestjs/common';
 import { ColumnsService } from './columns.service';
 import { CreateColumnDto } from './dto/create-column.dto';
@@ -68,6 +69,7 @@ export class ColumnsController {
       .status(HttpStatus.OK)
       .json(plainToInstance(ColumnEntity, column));
   }
+
   @Delete(':columnId')
   async deleteColumn(
     @Param('userId', ParseIntPipe) userId: number,
@@ -83,5 +85,25 @@ export class ColumnsController {
 
     await this.columnsService.deleteColumn(columnId);
     return res.status(HttpStatus.NO_CONTENT).send();
+  }
+
+  @Put(':columnId')
+  async updateColumn(
+    @Param('userId', ParseIntPipe) userId: number,
+    @Param('columnId', ParseIntPipe) columnId: number,
+    @Body() dto: CreateColumnDto,
+    @Res() res: Response,
+  ) {
+    const column = await this.columnsService.findColumnById(columnId);
+    if (!column || column.user?.id !== userId) {
+      return res
+        .status(HttpStatus.NOT_FOUND)
+        .json({ message: 'Column not found' });
+    }
+
+    const updatedColumn = await this.columnsService.updateById(columnId, dto);
+    return res
+      .status(HttpStatus.OK)
+      .json(plainToInstance(ColumnEntity, updatedColumn));
   }
 }

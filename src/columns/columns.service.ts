@@ -15,6 +15,10 @@ export class ColumnsService {
     return this.columnsRepository.save({ ...column, user: { id: userId } });
   }
 
+  async updateById(id: number, column: CreateColumnDto): Promise<ColumnEntity> {
+    return this.columnsRepository.save({ id, ...column });
+  }
+
   async findColumnsByUser(userId: number): Promise<ColumnEntity[]> {
     return this.columnsRepository.find({ where: { user: { id: userId } } });
   }
