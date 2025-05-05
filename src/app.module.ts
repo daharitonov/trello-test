@@ -6,6 +6,7 @@ import { UserModule } from './user/user.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ColumnsModule } from './columns/columns.module';
+import { CardsModule } from './cards/cards.module';
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { ColumnsModule } from './columns/columns.module';
       }),
     }),
     ColumnsModule,
+    CardsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
