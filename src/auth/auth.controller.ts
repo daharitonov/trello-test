@@ -13,6 +13,7 @@ import { Response } from 'express';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
 import { CreateUserDto } from 'src/user/dto/create-user.dto';
+import { plainToInstance } from 'class-transformer';
 
 @Controller('auth')
 export class AuthController {
@@ -24,10 +25,13 @@ export class AuthController {
   @Post('register')
   @UsePipes(new ValidationPipe({ whitelist: true }))
   async register(@Body() user: CreateUserDto): Promise<User> {
-    return this.userService.create(<User>{
-      email: user.email,
-      password: user.password,
-    });
+    return plainToInstance(
+      User,
+      await this.userService.create(<User>{
+        email: user.email,
+        password: user.password,
+      }),
+    );
   }
 
   @Post('login')
