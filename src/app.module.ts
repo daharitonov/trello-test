@@ -7,6 +7,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ColumnsModule } from './columns/columns.module';
 import { CardsModule } from './cards/cards.module';
+import { CommentsModule } from './comments/comments.module';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { CardsModule } from './cards/cards.module';
     }),
     ColumnsModule,
     CardsModule,
+    CommentsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

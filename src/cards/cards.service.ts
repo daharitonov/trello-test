@@ -12,11 +12,10 @@ export class CardsService {
   ) {}
 
   async findCardById(id: number): Promise<CardsEntity | null> {
-    return this.columnsRepository.findOne({ where: { id } });
-  }
-
-  async findCardsByColumnId(columnId: number): Promise<CardsEntity[]> {
-    return this.columnsRepository.find({ where: { column: { id: columnId } } });
+    return this.columnsRepository.findOne({
+      where: { id },
+      relations: ['column'],
+    });
   }
 
   async create(
@@ -30,7 +29,10 @@ export class CardsService {
   }
 
   async findCardsByColumn(columnId: number): Promise<CardsEntity[]> {
-    return this.columnsRepository.find({ where: { column: { id: columnId } } });
+    return this.columnsRepository.find({
+      where: { column: { id: columnId } },
+      relations: ['column'],
+    });
   }
 
   async update(id: number, updateCardDto: CreateCardDto): Promise<CardsEntity> {
