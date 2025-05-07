@@ -32,8 +32,11 @@ export class UserController {
     );
   }
 
-  @Get(':id')
-  async findOne(@Param('id', ParseIntPipe) id: number, @Res() res: Response) {
+  @Get(':userId')
+  async findOne(
+    @Param('userId', ParseIntPipe) id: number,
+    @Res() res: Response,
+  ) {
     const user = await this.userService.findOne(id);
     if (!user) {
       return res
