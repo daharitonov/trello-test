@@ -16,8 +16,10 @@ import { Response } from 'express';
 import { ColumnEntity } from './columns.entity';
 import { plainToInstance } from 'class-transformer';
 import { UserService } from 'src/user/user.service';
+import { ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 
 @Controller('users/:userId/columns')
+@ApiBearerAuth()
 export class ColumnsController {
   constructor(
     private columnsService: ColumnsService,
@@ -25,6 +27,7 @@ export class ColumnsController {
   ) {}
 
   @Post()
+  @ApiOperation({ summary: 'Создание колонки' })
   async createColumn(
     @Param('userId', ParseIntPipe) userId: number,
     @Body() dto: CreateColumnDto,
@@ -42,6 +45,7 @@ export class ColumnsController {
   }
 
   @Get()
+  @ApiOperation({ summary: 'Получение колонок пользователя' })
   async findColumns(
     @Param('userId', ParseIntPipe) userId: number,
     @Res() res: Response,
@@ -53,6 +57,7 @@ export class ColumnsController {
   }
 
   @Get(':columnId')
+  @ApiOperation({ summary: 'Колонка по Id' })
   async findColumn(
     @Param('userId', ParseIntPipe) userId: number,
     @Param('columnId', ParseIntPipe) columnId: number,
@@ -71,6 +76,7 @@ export class ColumnsController {
   }
 
   @Delete(':columnId')
+  @ApiOperation({ summary: 'Удаление колонки' })
   async deleteColumn(
     @Param('userId', ParseIntPipe) userId: number,
     @Param('columnId', ParseIntPipe) columnId: number,
@@ -88,6 +94,7 @@ export class ColumnsController {
   }
 
   @Put(':columnId')
+  @ApiOperation({ summary: 'Обновление колонки' })
   async updateColumn(
     @Param('userId', ParseIntPipe) userId: number,
     @Param('columnId', ParseIntPipe) columnId: number,

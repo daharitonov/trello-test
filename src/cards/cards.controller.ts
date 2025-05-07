@@ -20,8 +20,10 @@ import { UserService } from 'src/user/user.service';
 import { CreateCardDto } from './dto/create-card.dto';
 import { plainToInstance } from 'class-transformer';
 import { CardsEntity } from './cards.entity';
+import { ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 
 @Controller('users/:userId/columns/:columnId/cards')
+@ApiBearerAuth()
 export class CardsController {
   constructor(
     private cardsService: CardsService,
@@ -45,6 +47,7 @@ export class CardsController {
 
   @Post()
   @UsePipes(new ValidationPipe({ whitelist: true }))
+  @ApiOperation({ summary: 'Создание карточки' })
   async createCard(
     @Param('columnId', ParseIntPipe) columnId: number,
     @Param('userId', ParseIntPipe) userId: number,
@@ -59,6 +62,7 @@ export class CardsController {
   }
 
   @Get()
+  @ApiOperation({ summary: 'Карточки по колонке' })
   async getCardsByColumn(
     @Param('columnId', ParseIntPipe) columnId: number,
     @Param('userId', ParseIntPipe) userId: number,
@@ -70,6 +74,7 @@ export class CardsController {
   }
 
   @Get(':cardId')
+  @ApiOperation({ summary: 'Карточка по id' })
   async getCardById(
     @Param('cardId', ParseIntPipe) cardId: number,
     @Param('columnId', ParseIntPipe) columnId: number,
@@ -86,6 +91,7 @@ export class CardsController {
   }
 
   @Put(':cardId')
+  @ApiOperation({ summary: 'Обновление карточки' })
   @UsePipes(new ValidationPipe({ whitelist: true }))
   async updateCard(
     @Param('userId', ParseIntPipe) userId: number,
@@ -105,6 +111,7 @@ export class CardsController {
   }
 
   @Delete(':cardId')
+  @ApiOperation({ summary: 'Удаление карточки' })
   async deleteCard(
     @Param('userId', ParseIntPipe) userId: number,
     @Param('columnId', ParseIntPipe) columnId: number,

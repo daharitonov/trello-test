@@ -19,8 +19,10 @@ import { CommentsService } from './comments.service';
 import { ColumnsService } from 'src/columns/columns.service';
 import { CommentsEntity } from './comments.entity';
 import { CreateCommentDto } from './dto/create-comment.dto';
+import { ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 
 @Controller('users/:userId/columns/:columnId/cards/:cardId/comments')
+@ApiBearerAuth()
 export class CommentsController {
   constructor(
     private commentsService: CommentsService,
@@ -51,6 +53,7 @@ export class CommentsController {
   }
 
   @Post()
+  @ApiOperation({ summary: 'Создание комментария' })
   async createComment(
     @Param('userId', ParseIntPipe) userId: number,
     @Param('columnId', ParseIntPipe) columnId: number,
@@ -67,6 +70,7 @@ export class CommentsController {
   }
 
   @Get()
+  @ApiOperation({ summary: 'Получение комментариев по карточке' })
   async getCommentsByCard(
     @Param('userId', ParseIntPipe) userId: number,
     @Param('columnId', ParseIntPipe) columnId: number,
@@ -82,6 +86,7 @@ export class CommentsController {
   }
 
   @Get(':commentId')
+  @ApiOperation({ summary: 'Получение комментария по id' })
   async getCommentById(
     @Param('userId', ParseIntPipe) userId: number,
     @Param('columnId', ParseIntPipe) columnId: number,
@@ -99,6 +104,7 @@ export class CommentsController {
   }
 
   @Put(':commentId')
+  @ApiOperation({ summary: 'Обновление комментария' })
   async updateComment(
     @Param('userId', ParseIntPipe) userId: number,
     @Param('columnId', ParseIntPipe) columnId: number,
@@ -120,6 +126,7 @@ export class CommentsController {
   }
 
   @Delete(':commentId')
+  @ApiOperation({ summary: 'Удаление комментария' })
   async deleteComment(
     @Param('userId', ParseIntPipe) userId: number,
     @Param('columnId', ParseIntPipe) columnId: number,

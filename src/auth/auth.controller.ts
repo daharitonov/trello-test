@@ -14,6 +14,7 @@ import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
 import { CreateUserDto } from 'src/user/dto/create-user.dto';
 import { plainToInstance } from 'class-transformer';
+import { ApiOperation } from '@nestjs/swagger';
 
 @Controller('auth')
 export class AuthController {
@@ -23,6 +24,7 @@ export class AuthController {
   ) {}
 
   @Post('register')
+  @ApiOperation({ summary: 'Создание пользователя' })
   @UsePipes(new ValidationPipe({ whitelist: true }))
   async register(@Body() user: CreateUserDto): Promise<User> {
     return plainToInstance(
@@ -35,6 +37,7 @@ export class AuthController {
   }
 
   @Post('login')
+  @ApiOperation({ summary: 'Аутентификация пользователя' })
   async login(@Body() body: LoginDto, @Res() res: Response) {
     const { email, password } = body;
     const user = await this.userService.validateUser(email, password);

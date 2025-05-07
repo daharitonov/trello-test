@@ -15,12 +15,14 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { User } from './user.entity';
 import { plainToInstance } from 'class-transformer';
 import { Response } from 'express';
+import { ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 
 @Controller('users')
 export class UserController {
   constructor(private userService: UserService) {}
 
   @Post()
+  @ApiOperation({ summary: 'Создание пользователя' })
   @UsePipes(new ValidationPipe({ whitelist: true }))
   async create(@Body() user: CreateUserDto): Promise<User> {
     return plainToInstance(
@@ -33,6 +35,8 @@ export class UserController {
   }
 
   @Get(':userId')
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Получение пользователя по id' })
   async findOne(
     @Param('userId', ParseIntPipe) id: number,
     @Res() res: Response,
